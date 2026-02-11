@@ -5,7 +5,7 @@ terraform {
       version = "~> 5.0"
     }
   }
-  
+
   backend "s3" {
     bucket = "curso-comunidadedevops"
     key    = "dev/terraform.tfstate"
