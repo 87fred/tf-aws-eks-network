@@ -7,8 +7,9 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "curso-comunidadedevops"
-    key    = "dev/terraform.tfstate"
+    #Invente o nome da sua própria bucket
+    bucket = "terraform-state-eks-savethetfstate" 
+    key    = "network/terraform.tfstate"
     region = "us-east-1"
   }
 }
