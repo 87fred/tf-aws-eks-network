@@ -10,4 +10,3 @@ resource "aws_vpc" "eks_vpc" {
     }
   )
 }
-#LEMBRAR DE DAR UM TERRAFORM APPLY PRA SUBIR TUDO
