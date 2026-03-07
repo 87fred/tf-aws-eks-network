@@ -4,6 +4,8 @@
 
 Este projeto cria a base de networking necessária para executar clusters Kubernetes (EKS) na AWS, seguindo boas práticas de arquitetura cloud.
 
+🚜 **PROJETO AINDA EM CONSTRUÇÃO (WORK IN PROGRESS)** 🚧
+
 A infraestrutura provisionada inclui:
 
 🌐 VPC dedicada  
