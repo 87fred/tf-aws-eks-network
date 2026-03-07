@@ -1,4 +1,6 @@
-🚀 Terraform AWS EKS Network Infrastructure
+###################################################
+### 🚀 Terraform AWS EKS Network Infrastructure ###
+###################################################
 
 Este projeto provisiona a infraestrutura de rede necessária para um cluster Amazon EKS utilizando Terraform.
 
