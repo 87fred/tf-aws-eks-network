@@ -3,43 +3,41 @@
 ###################################################
 
 
-Este projeto provisiona a infraestrutura de rede necessária para um cluster Amazon EKS utilizando Terraform.
+Este projeto cria a base de networking necessária para executar clusters Kubernetes (EKS) na AWS, seguindo boas práticas de arquitetura cloud.
 
-A arquitetura segue boas práticas de AWS Networking e Kubernetes.
+A infraestrutura provisionada inclui:
 
-Recursos provisionados:
+🌐 VPC dedicada
 
-VPC dedicada
+🌍 Subnets públicas e privadas
 
-Subnets públicas e privadas
+🚪 Internet Gateway
 
-Internet Gateway
+🔐 NAT Gateway
 
-NAT Gateway
+🛣️ Route Tables
 
-Route Tables
+🏗️ Arquitetura Multi-AZ
 
-Multi-AZ networking
+Essa infraestrutura pode ser usada como fundação para clusters EKS em ambientes reais.
 
-Essa infraestrutura serve como base para clusters EKS em produção.
+🏗️ Arquitetura da Infraestrutura
 
-🏗️ Arquitetura
-
-Arquitetura da rede criada:
+Arquitetura simplificada da rede:
 
 Internet
    │
-Internet Gateway
+🌍 Internet Gateway
    │
-Public Subnets (Load Balancers)
+📦 Public Subnets
    │
-NAT Gateway
+🔐 NAT Gateway
    │
-Private Subnets
+🔒 Private Subnets
    │
-EKS Worker Nodes
+☸️ EKS Worker Nodes
 
-Fluxo de rede:
+Fluxo de comunicação:
 
 Internet
    │
@@ -58,7 +56,7 @@ Private Subnets
 EKS Nodes
 📁 Estrutura do Projeto
 
-Estrutura recomendada usada em projetos Terraform profissionais.
+Estrutura usada no projeto:
 
 terraform-aws-eks-network/
 │
@@ -80,13 +78,13 @@ terraform-aws-eks-network/
 └ README.md
 🌐 VPC Configuration
 
-A VPC utiliza o bloco CIDR:
+A VPC utiliza o seguinte bloco CIDR:
 
 10.0.0.0/16
 
-Isso permite até 65.536 IPs privados.
+Isso permite aproximadamente 65 mil endereços IP privados.
 
-Configuração importante habilitada:
+Configuração Terraform:
 
 resource "aws_vpc" "eks_vpc" {
   cidr_block = "10.0.0.0/16"
@@ -101,11 +99,11 @@ resource "aws_vpc" "eks_vpc" {
   }
 }
 
-Essas opções são necessárias para funcionamento correto do Amazon EKS.
+Essas opções são necessárias para o funcionamento do Amazon EKS.
 
 🧱 Subnets
 
-Foram criadas 4 subnets distribuídas em duas Availability Zones.
+Foram criadas 4 subnets distribuídas em duas Availability Zones, garantindo alta disponibilidade.
 
 🌍 Public Subnets
 Subnet	AZ	CIDR
@@ -116,13 +114,13 @@ Configuração importante:
 
 map_public_ip_on_launch = true
 
-Isso permite que recursos lançados nessas subnets recebam IP público automaticamente.
+Isso faz com que recursos nessas subnets recebam IP público automaticamente.
 
-Essas subnets são usadas para:
+Essas subnets são usadas principalmente para:
 
-Application Load Balancers
+⚖️ Application Load Balancers
 
-Network Load Balancers
+⚖️ Network Load Balancers
 
 Tag necessária para Kubernetes:
 
@@ -136,17 +134,17 @@ Configuração importante:
 
 map_public_ip_on_launch = false
 
-Isso garante que nodes do Kubernetes não tenham IP público, aumentando a segurança.
+Isso garante que os nodes do Kubernetes não tenham IP público, aumentando a segurança da infraestrutura.
 
-Tag utilizada para Kubernetes:
+Tag utilizada:
 
 "kubernetes.io/role/internal-elb" = "1"
 
-Isso permite a criação de Load Balancers internos.
+Essa tag permite a criação de Load Balancers internos.
 
 🌍 Internet Gateway
 
-O Internet Gateway (IGW) permite que recursos em subnets públicas se comuniquem com a internet.
+O Internet Gateway permite comunicação entre a VPC e a internet.
 
 Terraform:
 
@@ -163,13 +161,13 @@ O NAT Gateway permite que recursos em subnets privadas tenham acesso de saída �
 
 Isso é necessário para:
 
-baixar imagens do Amazon ECR
+📦 baixar imagens do Amazon ECR
 
-acessar AWS APIs
+🔑 acessar APIs da AWS
 
-instalar dependências
+⚙️ instalar dependências
 
-Arquitetura:
+Fluxo:
 
 Private Subnet → NAT Gateway → Internet Gateway → Internet
 
@@ -196,115 +194,89 @@ route {
 Essa route table é associada às subnets públicas.
 
 ▶️ Como Executar o Projeto
+
 1️⃣ Clonar o repositório
 git clone https://github.com/seu-usuario/terraform-aws-eks-network.git
 cd terraform-aws-eks-network/terraform
+
 2️⃣ Inicializar Terraform
 terraform init
-3️⃣ Verificar plano de execução
+
+3️⃣ Ver plano de execução
 terraform plan
+
 4️⃣ Criar infraestrutura
 terraform apply
+
 📊 Resultado Esperado
 
 Após executar o Terraform, a AWS terá:
 
-1 VPC
+✅ 1 VPC
+✅ 4 subnets
+✅ 1 Internet Gateway
+✅ 1 NAT Gateway
+✅ Route tables configuradas
 
-4 subnets
-
-1 Internet Gateway
-
-1 NAT Gateway
-
-Route tables configuradas
-
-Infraestrutura pronta para Amazon EKS
+Infraestrutura pronta para Amazon EKS.
 
 🔐 Boas Práticas Utilizadas
 
-Este projeto segue boas práticas de infraestrutura como código.
+Este projeto segue boas práticas de Infraestrutura como Código e Cloud Architecture.
 
 Terraform
 
-Infraestrutura declarativa
+📦 Infraestrutura declarativa
 
-Código versionado
+🧾 Código versionado
 
-Reprodutibilidade
+🔁 Deploy reprodutível
 
 AWS Networking
 
-Multi AZ
+🌍 Multi-AZ
 
-Separação entre subnets públicas e privadas
+🔒 Subnets públicas e privadas separadas
 
-Uso de NAT Gateway
-
-CIDR estruturado
+🔐 Uso de NAT Gateway
 
 Segurança
 
-Nodes em subnets privadas
+🚫 Nodes sem IP público
 
-Sem exposição direta à internet
+🔐 Infraestrutura isolada
 
 🚀 Melhorias Futuras
 
 Possíveis melhorias para evoluir o projeto:
 
-Criar cluster Amazon EKS
+☸️ Criar cluster Amazon EKS
 
-Adicionar AWS Load Balancer Controller
+⚖️ Adicionar AWS Load Balancer Controller
 
-Implementar Terraform Modules
+🧩 Implementar Terraform Modules
 
-Usar Remote State no S3
+🗄️ Usar Remote State no S3
 
-Adicionar DynamoDB Locking
+🔒 Adicionar DynamoDB Locking
 
-Criar VPC Endpoints
+🔗 Criar VPC Endpoints
 
-Implementar CI/CD com GitHub Actions
-
-🔐 Remote State (Recomendado)
-
-Para ambientes reais, utilize remote state no S3.
-
-Exemplo:
-
-terraform {
-  backend "s3" {
-    bucket         = "terraform-state-eks"
-    key            = "network/terraform.tfstate"
-    region         = "us-east-1"
-    dynamodb_table = "terraform-lock"
-  }
-}
-
-Isso permite:
-
-versionamento do state
-
-colaboração entre equipes
-
-state locking
+⚙️ Implementar CI/CD com GitHub Actions
 
 📚 Tecnologias Utilizadas
 
-Terraform
+☁️ AWS
 
-AWS VPC
+🏗️ Terraform
 
-AWS NAT Gateway
+☸️ Kubernetes / EKS
 
-AWS Internet Gateway
+🌐 AWS VPC
 
-Amazon EKS
+👨‍💻 Autor - Frederico de Almeida Morreira
 
-👨‍💻 Autor
-
-Projeto criado para estudo de:
+Projeto criado para estudo e implantação inicial de:
 
 Terraform
 
