@@ -8,7 +8,7 @@ terraform {
 
   backend "s3" {
     #Invente o nome da sua própria bucket
-    bucket = "terraform-state-eks-savethetfstate" 
+    bucket = "terraform-state-eks-savethetfstate"
     key    = "network/terraform.tfstate"
     region = "us-east-1"
   }
